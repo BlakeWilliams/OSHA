@@ -20,5 +20,3 @@ module OSHA
     end
   end
 end
-
-eval("'hello'")
