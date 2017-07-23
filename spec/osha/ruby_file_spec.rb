@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'tempfile'
 
 RSpec.describe OSHA::RubyFile do
-  describe '#apply_rule' do
-    it "calls run on each passed in rule" do
+  describe '#apply_rules' do
+    it "returns a list of warnings" do
       file = Tempfile.new('foo.rb')
       file.write <<-FILE
       if true
@@ -13,26 +13,50 @@ RSpec.describe OSHA::RubyFile do
       file.close
       ruby_file = OSHA::RubyFile.new(file.path)
 
-      mock = double(:caller)
-      allow(mock).to receive(:call)
-      rule = TestRule.new(mock)
+      warnings = ruby_file.apply_rules([TestRule.new])
 
-      ruby_file.apply_rule(rule)
+      expect(warnings.length).to eq(3)
+    end
 
-      expect(mock).to have_received(:call).with(s(:true)).once
-      expect(mock).to have_received(:call).with(
-        s(:call, nil, :puts, s(:str, "Hello!"))).once
-      expect(mock).to have_received(:call).with(s(:str, "Hello!")).once
+    it "runs multiple rules" do
+      file = Tempfile.new('foo.rb')
+      file.write <<-FILE
+      if true
+        puts "Hello!"
+      end
+      FILE
+      file.close
+      ruby_file = OSHA::RubyFile.new(file.path)
+
+      warnings = ruby_file.apply_rules([TestRule.new, TestRule.new])
+
+      expect(warnings.length).to eq(6)
+    end
+
+    it "filters out nils" do
+      file = Tempfile.new('foo.rb')
+      file.write <<-FILE
+      if true
+        puts "Hello!"
+      end
+      FILE
+      file.close
+      ruby_file = OSHA::RubyFile.new(file.path)
+
+      warnings = ruby_file.apply_rules([TestRule.new, NilRule.new])
+
+      expect(warnings.length).to eq(3)
     end
   end
 
-  class TestRule
-    def initialize(mock)
-      @mock = mock
-    end
-
+  class TestRule < OSHA::Rule::Rule
     def run(sexp)
-      @mock.call(sexp)
+      create_warning("test", sexp)
+    end
+  end
+
+  class NilRule < OSHA::Rule::Rule
+    def run(sexp)
     end
   end
 end
