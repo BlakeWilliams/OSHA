@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'OSHA'
+
+rules = [
+  OSHA::Rule::Eval.new
+]
+
+formatter = OSHA::Formatter::TextFormatter.new
+
+Dir.glob("**/*.rb").each do |file|
+  OSHA::RubyFile.new(file).apply_rules(rules).each do |warning|
+    formatter.print(warning)
+    puts
+  end
+end
