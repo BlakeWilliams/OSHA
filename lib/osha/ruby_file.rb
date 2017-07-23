@@ -9,10 +9,14 @@ module OSHA
       @sexp = PROCESSOR.parse(File.read(file_path))
     end
 
-    def apply_rule(rule)
-      @sexp.deep_each do |sexp|
-        rule.run(sexp)
+    def apply_rules(rules)
+      warnings = @sexp.deep_each.flat_map do |sexp|
+        rules.map do |rule|
+          rule.run(sexp)
+        end
       end
+
+      warnings.compact
     end
   end
 end
