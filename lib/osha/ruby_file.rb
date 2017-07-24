@@ -7,6 +7,7 @@ module OSHA
     def initialize(file_path)
       @file_path = file_path
       @sexp = PROCESSOR.parse(File.read(file_path), file_path)
+    rescue
     end
 
     def apply_rules(rules)

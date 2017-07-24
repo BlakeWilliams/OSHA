@@ -21,4 +21,14 @@ RSpec.describe OSHA::Rule::Eval do
       expect(warning).to be_nil
     end
   end
+
+  describe "Kernel.eval is called on an object" do
+    it "returns nil" do
+      sexp = RubyParser.new.parse("Kernel.eval('1')")
+
+      warning = OSHA::Rule::Eval.new.run(sexp)
+
+      expect(warning.message).to eq("Use of eval")
+    end
+  end
 end

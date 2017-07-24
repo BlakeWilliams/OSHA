@@ -3,13 +3,10 @@ module OSHA::Rule
     def run(sexp)
       return unless sexp.sexp_type == :call
 
-      case sexp[2]
-      when :eval
+      if (sexp[1] == nil || sexp[1][1] == :Kernel) && sexp[2] == :eval
         create_warning("Use of eval", sexp)
-      when :instance_eval
+      elsif sexp[2] == :instance_eval
         create_warning("Use of instance_eval", sexp)
-      else
-        nil
       end
     end
   end
