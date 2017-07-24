@@ -1,28 +1,14 @@
-# Osha
+# OSHA
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/osha`. To experiment with that code, run `bin/console` for an interactive prompt.
+Occupational Safety and Health Automation.
 
-TODO: Delete this and the text above, and describe your gem
+This gem parses your project looking for usage of methods that you probably
+don't want to call, like `eval`, and `instance_eval`.
 
-## Installation
+## Installation & Usage
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'osha'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install osha
-
-## Usage
-
-TODO: Write usage instructions here
+1. Run `gem install OSHA`
+1. Run `osha` in your project directory
 
 ## Development
 
