@@ -10,6 +10,8 @@ module OSHA
     end
 
     def apply_rules(rules)
+      return [] if @sexp.nil?
+
       warnings = @sexp.deep_each.flat_map do |sexp|
         rules.map do |rule|
           rule.run(sexp)

@@ -47,6 +47,18 @@ RSpec.describe OSHA::RubyFile do
 
       expect(warnings.length).to eq(3)
     end
+
+    it "does not crash on empty files" do
+      file = Tempfile.new('foo.rb')
+      file.write <<-FILE
+      FILE
+      file.close
+      ruby_file = OSHA::RubyFile.new(file.path)
+
+      warnings = ruby_file.apply_rules([TestRule.new, NilRule.new])
+
+      expect(warnings).to eq([])
+    end
   end
 
   class TestRule < OSHA::Rule::Rule
