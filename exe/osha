@@ -3,7 +3,8 @@
 require 'OSHA'
 
 rules = [
-  OSHA::Rule::Eval.new
+  OSHA::Rule::Eval.new,
+  OSHA::Rule::ThreadCurrent.new
 ]
 
 formatter = OSHA::Formatter::TextFormatter.new
